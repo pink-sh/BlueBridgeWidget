@@ -1,0 +1,34 @@
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BlueBridge Widget test page</title>
+	<link rel="stylesheet" href="http://vps282167.ovh.net/BlueBridgeWPSClient/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="http://vps282167.ovh.net/BlueBridgeWPSClient/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://vps282167.ovh.net/BlueBridgeWPSClient/css/wpsclient.css">
+	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/jquery.min.js"></script>
+    <script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/bootstrap.min.js"></script>
+    <script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/bootstrap-datepicker.min.js"></script>
+	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/wpsclient_tools.min.js"></script>
+	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/opencpu-0.4.js"></script>
+	<script src="js/bb_widget.js"></script>
+	<script src="js/bb_general_experiment.js"></script>
+	<script>
+		$(document).ready(function() { 
+			var bb_widget = new BBWidget(
+				"http://dataminer.d4science.org/wps/WebProcessingService",
+				"enrico.anello",
+				"5b0f903a-3cb1-4424-a2bd-2700c9f1d4ed",
+				"org.gcube.dataanalysis.wps.statisticalmanager.synchserver.mappedclasses.transducerers.CATCHES_AGGREGATED_FOLLOWING_A_SELECT_VARIABLE",
+				"#experiment",
+				"//access.d4science.org/ocpu/library/WPSClient/R",
+				new GeneralExperiment(),
+				{'dateFields' : ['TimeStart', 'TimeEnd']}
+			);
+			bb_widget.init();
+		});
+	</script>
+</head>
+<body>
+	<div id="experiment"></div>
+</body>
