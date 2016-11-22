@@ -6,7 +6,6 @@
 	<link rel="stylesheet" href="http://vps282167.ovh.net/BlueBridgeWPSClient/css/bootstrap-datepicker.min.css">
 	<link rel="stylesheet" href="http://vps282167.ovh.net/BlueBridgeWPSClient/css/bootstrap.min.css">
 	<link rel="stylesheet" href="http://vps282167.ovh.net/BlueBridgeWPSClient/css/wpsclient.css">
-	<link rel="stylesheet" href="css/bb_widget.css">
 	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/jquery.min.js"></script>
 	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/bootstrap.min.js"></script>
 	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/bootstrap-datepicker.min.js"></script>
@@ -14,25 +13,17 @@
 	<script src="http://vps282167.ovh.net/BlueBridgeWPSClient/js/opencpu-0.4.js"></script>
 	<script src="js/bb_widget.js"></script>
 	<script src="js/bb_general_experiment.js"></script>
-	<script src="js/species.js"></script>
 	<script>
 		$(document).ready(function() { 
 			var bb_widget = new BBWidget(
-				"http://dataminer.d4science.org/wps/WebProcessingService",
+				"https://dataminer-prototypes.d4science.org/wps/WebProcessingService",
 				"enrico.anello",
-				"5b0f903a-3cb1-4424-a2bd-2700c9f1d4ed",
-				"org.gcube.dataanalysis.wps.statisticalmanager.synchserver.mappedclasses.transducerers.CATCHES_AGGREGATED_FOLLOWING_A_SELECT_VARIABLE",
+				"47ab1922-3792-4f0d-a581-b616051a6f9f-843339462",
+				"org.gcube.dataanalysis.wps.statisticalmanager.synchserver.mappedclasses.transducerers.CMSY_2",
 				"#experiment",
 				"//access.d4science.org/ocpu/library/WPSClient/R",
 				new GeneralExperiment(),
-				{'dateFields' : ['TimeStart', 'TimeEnd'],
-				 'autocompletes' : 
-				 	{
-				 		'SpeciesFilter' : 'http://vps282167.ovh.net/BlueBridgeWidget/services/species.php',
-				 		'GearFilter' : 'http://vps282167.ovh.net/BlueBridgeWidget/services/gears.php',
-				 		'FlagFilter' : 'http://vps282167.ovh.net/BlueBridgeWidget/services/flags.php'
-				 	}
-				}
+				{'dateFields' : ['TimeStart', 'TimeEnd']}
 			);
 			bb_widget.init();
 		});
