@@ -4,45 +4,35 @@ header('Access-Control-Allow-Methods: GET, POST');
 header('Content-Type: application/json');
 $q = htmlspecialchars($_GET["q"]);
 
-$in = array (
-	array(
-		'id' => 'NULL',
-		'value' => 'NULL',
-		'label' => 'NONE'
-	),
-	array(
-		'id' => 'BB',
-		'value' => 'BB',
-		'label' => 'Baitboat'
-	),
-	array(
-		'id' => 'LL',
-		'value' => 'LL',
-		'label' => 'Longline'
-	),
-	array(
-		'id' => 'OTHER',
-		'value' => 'OTHER',
-		'label' => 'Other'
-	),
-	array(
-		'id' => 'PS',
-		'value' => 'PS',
-		'label' => 'Purse seine'
-	),
-);
+$conn = pg_connect("host=db-tuna.d4science.org port=5432 dbname=sardara_world user=invsardara password=fle087");
 
-$out = array();
-if ($q == null || trim($q) == '') {
-	print(json_encode($in));
+if ($q != null && $q != "") {
+	$where = "where LOWER(gear_labels.english_name_gear) ILIKE '%".strtolower($q)."%'";
 } else {
-	foreach ($in as $obj) {
-	    if (strpos(strtolower($obj['label']), strtolower($q)) !== false) {
-		    array_push($out, $obj);
-		}
-	}
-	print(json_encode($out));
+	$where = "";
 }
+
+$query = "(select " .
+"distinct gear_labels.codesource_gear AS value,  " .
+"gear_labels.english_name_gear AS label  " .
+"from tunaatlas.catches_ird_rf1  " .
+"JOIN gear.gear_labels ON catches_ird_rf1.id_gear_standard=gear_labels.id_gear  ".$where.") " .
+"UNION  " .
+"(select distinct gear_labels.codesource_gear AS value,  " .
+"gear_labels.english_name_gear AS label  " .
+"from tunaatlas.catches_ird_rf1  " .
+"JOIN gear.gear_labels ON catches_ird_rf1.id_geargroup_standard=gear_labels.id_gear ".$where.") " .
+"order by label";
+
+$result = pg_query($conn, $query);
+$out = array();
+while ($row = pg_fetch_row($result)) {
+	$o['label'] = $row[1];
+	$o['value'] = $row[0];
+	$o['id'] = $row[0];
+	array_push($out, $o);
+}
+print(json_encode($out));
 
 
 ?>
