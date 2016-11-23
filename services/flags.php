@@ -7,24 +7,16 @@ $q = htmlspecialchars($_GET["q"]);
 $conn = pg_connect("host=db-tuna.d4science.org port=5432 dbname=sardara_world user=invsardara password=fle087");
 
 if ($q != null && $q != "") {
-	$where1 = "where flag ILIKE '%".$q."%'";
-	$where2 = "where flagname ILIKE '%".$q."%'";
-	$where3 = "where fleet ILIKE '%".$q."%'";
+	$where = " where LOWER(flag_labels.english_name_flag) ILIKE '%".strtolower($q)."%'";
 } else {
-	$where1 = "";
-	$where2 = "";
-	$where3 = "";
+	$where = "";
 }
 
-$query = "(SELECT codigo_code AS value, flag as label " .
-"FROM flag.flag_iattc ".$where1.") " .
-"UNION " .
-"(SELECT flagcode AS value, flagname as label " .
-"FROM flag.flag_iccat ".$where2.") " .
-"UNION " .
-"(SELECT flcde AS value, fleet as label " .
-"FROM flag.flag_iotc ".$where3.") " .
-"ORDER BY label;";
+$query = "select distinct " .
+"flag_labels.codesource_flag AS value, " .
+"flag_labels.english_name_flag AS label " .
+"from tunaatlas.catches_ird_rf1 " .
+"JOIN flag.flag_labels ON catches_ird_rf1.id_flag_standard=flag_labels.id_flag " . $where . " order by flag_labels.english_name_flag";
 $result = pg_query($conn, $query);
 $out = array();
 while ($row = pg_fetch_row($result)) {
