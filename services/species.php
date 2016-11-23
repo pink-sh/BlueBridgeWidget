@@ -7,12 +7,22 @@ $q = htmlspecialchars($_GET["q"]);
 $conn = pg_connect("host=db-tuna.d4science.org port=5432 dbname=sardara_world user=invsardara password=fle087");
 
 if ($q != null && $q != "") {
-	$where = "where english_name ILIKE '%".$q."%'";
+	$where = "where LOWER(species_labels.english_name_species) ILIKE '%".strtolower($q)."%'";
 } else {
 	$where = "";
 }
 
-$query = "SELECT x3a_code as value, english_name as label FROM species.species_asfis ".$where." order by english_name;";
+$query = "(select distinct " .
+"species_labels.codesource_species AS value, " .
+"species_labels.english_name_species AS label " .
+"from tunaatlas.catches_ird_rf1 " .
+"JOIN species.species_labels ON catches_ird_rf1.id_species_standard=species_labels.id_species ".$where.") " .
+"UNION " .
+"(select distinct " .
+"species_labels.codesource_species AS value, " .
+"species_labels.english_name_species AS label " .
+"from tunaatlas.catches_ird_rf1 " .
+"JOIN species.species_labels ON catches_ird_rf1.id_speciesgroup_tunaatlas=species_labels.id_species ".$where.") order by label";
 $result = pg_query($conn, $query);
 $out = array();
 while ($row = pg_fetch_row($result)) {
