@@ -108,7 +108,7 @@ class GeneralExperiment extends BBWidget {
 				var acList = [];
 				if (_this.autocompletes[data[i].Identifier] != undefined) {
 					var ddid = _this.generateUUID();
-					paramInput = $("<select>").attr('id', ddid).attr("class", "js-data-example-ajax").attr("style", "width: 290px;").attr("multiple", "multiple").change(createChangeCallBack(originalIdentifier, _this));
+					paramInput = $("<select>").attr('id', ddid).attr("class", "js-data-example-ajax").attr("style", "width: 290px;").attr("multiple", "multiple");
 					acList.push({'id' : ddid, 'link' : _this.autocompletes[data[i].Identifier]});
 				} else if (_this.dateFields.indexOf(data[i].Identifier) != -1) {
 					var ddid = _this.generateUUID();
@@ -125,15 +125,15 @@ class GeneralExperiment extends BBWidget {
 
 				} else {
 					if (data[i].Type == "ComplexData") {
-						paramInput = $("<input>").attr('type', 'text').attr('name', identifier).attr('id', identifier).attr("class", "form-control").attr("style", "margin-bottom: 10px; margin-left: 5px;").change(createChangeCallBack(originalIdentifier, _this));
+						paramInput = $("<input>").attr('type', 'text').attr('name', data[i].Identifier).attr('id', data[i].Identifier).attr("class", "form-control").attr("style", "margin-bottom: 10px; margin-left: 5px;").change(createChangeCallBack(originalIdentifier, _this));
 					}
 					else if (data[i].AllowedValues.length > 1) {
-						paramInput = $("<select>").attr('name', data[i].Identifier).attr('id', identifier).attr("class", "form-control").attr("style", "margin-bottom: 10px; margin-left: 5px;").change(createChangeCallBack(originalIdentifier, _this));
+						paramInput = $("<select>").attr('name', data[i].Identifier).attr('id', data[i].Identifier).attr("class", "form-control").attr("style", "margin-bottom: 10px; margin-left: 5px;").change(createChangeCallBack(originalIdentifier, _this));
 						for (var j =0; j < data[i].AllowedValues.length; j++) {
 							paramInput.append($("<option>").attr('value', data[i].AllowedValues[j]).text(data[i].AllowedValues[j]));
 						}
 					} else {
-						paramInput = $("<input>").attr('type', 'text').attr('name', identifier).attr('id', identifier).attr("class", "form-control").attr("style", "margin-bottom: 10px; margin-left: 5px;").change(createChangeCallBack(originalIdentifier, _this)).val(data[i].DefaultValue);
+						paramInput = $("<input>").attr('type', 'text').attr('name', data[i].Identifier).attr('id', data[i].Identifier).attr("class", "form-control").attr("style", "margin-bottom: 10px; margin-left: 5px;").change(createChangeCallBack(originalIdentifier, _this)).val(data[i].DefaultValue);
 					}
 				}
 				var qMark = $("<div>").attr("class", "tooltip2").html("?&nbsp;&nbsp;&nbsp;&nbsp;").append($("<div>").attr("class", "tooltiptext2").html(description));
@@ -402,16 +402,10 @@ class GeneralExperiment extends BBWidget {
 	changeInput(input, identifier) {
 		for (var k in window.experiment[this.container]) {
 			if (k==identifier) {
-				var maxIdx = -1;
-				var i = 0;
-				while (input[i] != undefined) {
-					maxIdx += 1;
-					i += 1;
-				}
-				if (maxIdx >= 0) {
+				if (Array.isArray($('#' + input.id).val())) {
 					var ts = '';
-					for (var i = 0; i <= maxIdx; i++) {
-						ts = ts + input[i].value + ",";
+					for (var i = 0; i < $('#' + input.id).val().length; i++) {
+						ts = ts + $('#' + input.id).val()[i] + ",";
 					}
 					window.experiment[this.container][identifier] = ts.replace(/,\s*$/, "");
 				} else {
